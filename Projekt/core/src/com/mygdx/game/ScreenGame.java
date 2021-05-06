@@ -39,6 +39,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
     Charcters postac = new Charcters();
     Hex hexy = new Hex(batch);
+    Demon oni_bi = new Demon();
 
     public void create () {
         camera = new OrthographicCamera(1280/4,720/4);//320,180
@@ -46,7 +47,9 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         postac.Load_characters();
+        oni_bi.init();
     }
+
 
     void GameScreen(){
         batch = new SpriteBatch();
@@ -62,6 +65,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.end();
         //hexy.drawHexes(batch,camera);
+        hexy.drawHex(oni_bi.x,oni_bi.y,batch,camera,2);
         for(int i = postac.getX()-1;i<=postac.getX()+1;i++)
             for(int j = postac.getY()-1;j<=postac.getY()+1;j++){
             if(i>-1 && j>-1 && i<49 && j<49)
@@ -78,6 +82,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         batch.begin();
         //System.out.println("Postac: " + hexy.hexCenterx(postac.getX(), postac.getY()) + ", " +  hexy.hexCentery(postac.getY()));
         batch.draw(mapatest,0,0);
+        batch.draw(oni_bi.demon[0],hexy.hexCenterx(oni_bi.x,oni_bi.y)-15,hexy.hexCentery(oni_bi.y)-20);
         batch.draw(postac.Warrior[0], hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()));
         //System.out.println(postac.getX()+", "+postac.getY());
       //  batch.draw(postac.Warrior[0], 0, 0);

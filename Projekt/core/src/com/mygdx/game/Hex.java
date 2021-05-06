@@ -57,10 +57,10 @@ public class Hex {
                     zm+=2;
                 }
             }
-            for (int i=3;i<20;i++) {
+            for (int i=4;i<20;i++) {
                 zm = 0;
                 for (int j = 29; j <= 39; j++) {
-                    if (i + 26 <= j) {
+                    if (i + 25 <= j) {
                         board[i][j] = -1;
                     }
                     zm += 1;
@@ -138,7 +138,6 @@ public class Hex {
             for (int i=0;i<BSIZE;i++) {
                 for (int j=0;j<BSIZE;j++) {
                     Hex.drawHex(i,j,batch, camera,0);
-
                 }
             }
         }
@@ -224,10 +223,19 @@ public class Hex {
                 hex.begin(ShapeRenderer.ShapeType.Line);
                 hex.setColor(com.badlogic.gdx.graphics.Color.BLACK);
                 tri.begin(ShapeRenderer.ShapeType.Filled);
-                tri.setColor(new com.badlogic.gdx.graphics.Color(0xB9F2FF));//O TU SIĘ WYBIERA KOLORY
+                tri.setColor(new com.badlogic.gdx.graphics.Color(0x4D80BCFF));//O TU SIĘ WYBIERA KOLORY
                 hex.polygon(Hex.hex(x, y));
 
                 if (hero == 1) {
+                    float[] points = hex(x, y);
+                    for (int k = 0; k < 10; k = k + 2) {
+                        tri.triangle(points[k], points[k + 1], points[k + 2], points[k + 3], x + r + BORDERS, y + t + (s / 2) + BORDERS);
+                    }
+                    tri.triangle(points[0], points[1], points[10], points[11], x + r + BORDERS, y + t + (s / 2) + BORDERS);
+                    tri.end();
+                }
+                else if(hero == 2){
+                    tri.setColor(new com.badlogic.gdx.graphics.Color(0xA74B4DFF));
                     float[] points = hex(x, y);
                     for (int k = 0; k < 10; k = k + 2) {
                         tri.triangle(points[k], points[k + 1], points[k + 2], points[k + 3], x + r + BORDERS, y + t + (s / 2) + BORDERS);
