@@ -55,9 +55,13 @@ public class Hex {
                     board[i][j]=0;
                 }
             }
-            board[0][0] = -1;
 
 
+            for (int i=0;i<40;i++) {
+                for (int j=0;j<40;j++) {
+                    board[i][j]=0;
+                }
+            }
         }
 
         void drawHexes(SpriteBatch batch, OrthographicCamera camera){
@@ -71,8 +75,8 @@ public class Hex {
 
         public static int s=0;	// length of one side
         public static int t=0;	// short side of 30o triangle outside of each hex
-    public static int r=0;	// radius of inscribed circle (centre to middle of each side). r= h/2
-    public static int h=0;	// height. Distance between centres of two adjacent hexes. Distance between two opposite sides in a hex.
+        public static int r=0;	// radius of inscribed circle (centre to middle of each side). r= h/2
+        public static int h=0;	// height. Distance between centres of two adjacent hexes. Distance between two opposite sides in a hex.
 
         /** This functions takes the Side length in pixels and uses that as the basic dimension of the hex.
          It calculates all other needed constants from this dimension.
@@ -139,32 +143,33 @@ public class Hex {
             {
                 return;
             }
-            else
-            camera.update();
-            ShapeRenderer hex = new ShapeRenderer();
-            ShapeRenderer tri = new ShapeRenderer();
+            else {
+                camera.update();
+                ShapeRenderer hex = new ShapeRenderer();
+                ShapeRenderer tri = new ShapeRenderer();
 
-            hex.setProjectionMatrix(batch.getProjectionMatrix());
-            tri.setProjectionMatrix(batch.getProjectionMatrix());
+                hex.setProjectionMatrix(batch.getProjectionMatrix());
+                tri.setProjectionMatrix(batch.getProjectionMatrix());
 
-            hex.begin(ShapeRenderer.ShapeType.Line);
-            hex.setColor(com.badlogic.gdx.graphics.Color.BLACK);
-            tri.begin(ShapeRenderer.ShapeType.Filled);
-            tri.setColor(new com.badlogic.gdx.graphics.Color(0xB9F2FF));//O TU SIĘ WYBIERA KOLORY
-            hex.polygon(Hex.hex(x,y));
+                hex.begin(ShapeRenderer.ShapeType.Line);
+                hex.setColor(com.badlogic.gdx.graphics.Color.BLACK);
+                tri.begin(ShapeRenderer.ShapeType.Filled);
+                tri.setColor(new com.badlogic.gdx.graphics.Color(0xB9F2FF));//O TU SIĘ WYBIERA KOLORY
+                hex.polygon(Hex.hex(x, y));
 
-            if(hero == 1){
-                float[] points = hex(x,y);
-                for(int k=0;k<10;k=k+2){
-                    tri.triangle(points[k],points[k+1],points[k+2],points[k+3],x+r+BORDERS,y+t+(s/2)+BORDERS);
+                if (hero == 1) {
+                    float[] points = hex(x, y);
+                    for (int k = 0; k < 10; k = k + 2) {
+                        tri.triangle(points[k], points[k + 1], points[k + 2], points[k + 3], x + r + BORDERS, y + t + (s / 2) + BORDERS);
+                    }
+                    tri.triangle(points[0], points[1], points[10], points[11], x + r + BORDERS, y + t + (s / 2) + BORDERS);
+                    tri.end();
                 }
-                tri.triangle(points[0],points[1],points[10],points[11], x+r+BORDERS,y+t+(s/2)+BORDERS);
-                tri.end();
-            }
 
-            hex.end();
-            hex.dispose();
-            tri.dispose();
+                hex.end();
+                hex.dispose();
+                tri.dispose();
+            }
         }
 }
 

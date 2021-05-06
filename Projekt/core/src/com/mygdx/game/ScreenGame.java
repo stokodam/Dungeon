@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -61,7 +62,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0.3f,0.3f,0.3f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.end();
-        hexy.drawHexes(batch,camera);
+        //hexy.drawHexes(batch,camera);
         for(int i = postac.getX()-1;i<=postac.getX()+1;i++)
             for(int j = postac.getY()-1;j<=postac.getY()+1;j++){
             if(i>-1 && j>-1 && i<49 && j<49)
@@ -132,10 +133,12 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        mousepositionx = Gdx.input.getX();
-        mousepositiony = Math.abs(Gdx.input.getY()-720);
+        mousepositionx = Gdx.input.getX() + (int)(camera.position.x-160)*4;
+        mousepositiony = Math.abs(Gdx.input.getY()-720) + (int)(camera.position.y-90)*4;
 
-        //System.out.println(mousepositionx + ", " + mousepositiony);
+        //System.out.println(camera.position);
+
+        //System.out.println(mousepositionx/4 + ", " + mousepositiony/4);
         //System.out.println((placementX-160) + ", " + (placementY-90));
         //System.out.println((placementX) + ", " + (placementY));
         return false;
@@ -182,18 +185,30 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
                     if(Intersector.isPointInPolygon(polygon,new Vector2(mousepositionx/4,mousepositiony/4))) {//TUTAJ NAM SPRAWDZA KOLIZJE
                         if (postac.getX() == i && (postac.getY() - j == 1 || postac.getY() - j == -1)) {
                             postac.move_player(i, j);
+                            //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
+                            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                            //System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
                         }
 
                         if (postac.getY() == j && (postac.getX() - i == 1 || postac.getX() - i == -1)) {
                             postac.move_player(i, j);
+                            //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
+                            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                            System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
                         }
 
                         if (j%2 == 0 && postac.getX() - i == -1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
                             postac.move_player(i, j);
+                            //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
+                            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                            System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
                         }
 
                         if (j%2 == 1 && postac.getX() - i == 1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
                             postac.move_player(i, j);
+                            //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
+                            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                            System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
                     }
                         System.out.println(i+", "+j);
                     }

@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Charcters {
-    int x = 32;
-    int y = 1;
+    int x = 9;
+    int y = 9;
     TextureAtlas playerTexture;
     TextureRegion[] Warrior = new TextureRegion[24];
 
