@@ -42,7 +42,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
     public void create () {
         camera = new OrthographicCamera(1280/4,720/4);//320,180
-        camera.position.set(160,90,0);
+        camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         postac.Load_characters();
@@ -56,7 +56,6 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
     public void render(float deltaTime) {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(mapatest,0,0);
         Gdx.input.setInputProcessor(this);
         camera.update();
         Gdx.gl.glClearColor(0.3f,0.3f,0.3f,1);
@@ -78,7 +77,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
         batch.begin();
         //System.out.println("Postac: " + hexy.hexCenterx(postac.getX(), postac.getY()) + ", " +  hexy.hexCentery(postac.getY()));
-
+        batch.draw(mapatest,0,0);
         batch.draw(postac.Warrior[0], hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()));
         //System.out.println(postac.getX()+", "+postac.getY());
       //  batch.draw(postac.Warrior[0], 0, 0);
@@ -146,24 +145,40 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        if(amountY > 0 && zoompower <=50f){
+        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
+        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
+
+        if(amountY > 0 && zoompower <=10.5f){
             camera.update();
             batch.setProjectionMatrix(camera.combined);
             zoompower +=0.1f;
             camera.zoom += 0.1f;
-
         }
         else if(amountY < 0 && zoompower >=10.1f){
             camera.update();
             batch.setProjectionMatrix(camera.combined);
             zoompower -=0.1f;
             camera.zoom -= 0.1f;
+            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
         }
+
+        if(camera.position.x - effectiveViewportWidth/2 < 0)
+            camera.position.x = 0 + effectiveViewportWidth/2;
+        else if(camera.position.x + effectiveViewportWidth/2 > 970)
+            camera.position.x = 970 - effectiveViewportWidth/2;
+        if(camera.position.y + effectiveViewportHeight/2 > 676)
+            camera.position.y = 676 - effectiveViewportHeight/2;
+        else if(camera.position.y - effectiveViewportHeight/2 < 0)
+            camera.position.y = 0 + effectiveViewportHeight/2;
+
         return false;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
+        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
+
         if(button == Input.Buttons.LEFT){
             //System.out.println("YUP");
             //System.out.println( mousepositionx+ ", "+mousepositiony);
@@ -184,32 +199,44 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
                     //TUTAJ HUBERT, GDZIEś TUTAJ
                     if(Intersector.isPointInPolygon(polygon,new Vector2(mousepositionx/4,mousepositiony/4))) {//TUTAJ NAM SPRAWDZA KOLIZJE
                         if (postac.getX() == i && (postac.getY() - j == 1 || postac.getY() - j == -1)) {
-                            postac.move_player(i, j);
+                            if(hexy.board[i][j] != -1)
+                                postac.move_player(i, j);
                             //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
                             camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
                             //System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
                         }
 
                         if (postac.getY() == j && (postac.getX() - i == 1 || postac.getX() - i == -1)) {
-                            postac.move_player(i, j);
+                            if(hexy.board[i][j] != -1)
+                                postac.move_player(i, j);
                             //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
                             camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
                             System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
                         }
 
                         if (j%2 == 0 && postac.getX() - i == -1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
-                            postac.move_player(i, j);
+                            if(hexy.board[i][j] != -1)
+                                postac.move_player(i, j);
                             //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
                             camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
                             System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
                         }
 
                         if (j%2 == 1 && postac.getX() - i == 1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
-                            postac.move_player(i, j);
+                            if(hexy.board[i][j] != -1)
+                                postac.move_player(i, j);
                             //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
                             camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
                             System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
                     }
+                        if(camera.position.x - effectiveViewportWidth/2 < 0)
+                            camera.position.x = 0 + effectiveViewportWidth/2;
+                        else if(camera.position.x + effectiveViewportWidth/2 > 970)
+                            camera.position.x = 970 - effectiveViewportWidth/2;
+                        if(camera.position.y + effectiveViewportHeight/2 > 676)
+                            camera.position.y = 676 - effectiveViewportHeight/2;
+                        else if(camera.position.y - effectiveViewportHeight/2 < 0)
+                            camera.position.y = 0 + effectiveViewportHeight/2;
                         System.out.println(i+", "+j);
                     }
                 }

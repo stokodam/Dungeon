@@ -44,7 +44,83 @@ public class Hex {
         final static int BORDERS = 15;
 
 
-        static int[][] board = new int[BSIZE][BSIZE];
+        static public int[][] board = new int[BSIZE][BSIZE];
+
+        static private void limit(){
+            int zm = 0;
+            for (int i=2;i<32;i++) {
+                zm = 0;
+                for (int j=29;j>=0;j--) {
+                    if(i+27 <= j + zm) {
+                        board[i][j] = -1;
+                    }
+                    zm+=2;
+                }
+            }
+            for (int i=3;i<20;i++) {
+                zm = 0;
+                for (int j = 29; j <= 39; j++) {
+                    if (i + 26 <= j) {
+                        board[i][j] = -1;
+                    }
+                    zm += 1;
+                }
+            }
+            for (int i=14;i<20;i++) {
+                zm = 0;
+                for (int j=40;j>=31;j--) {
+                    if(i + 27 >= j + zm) {
+                        board[i][j] = -1;
+                    }
+                    zm+=2;
+                }
+            }
+            for (int i=20;i<36;i++) {
+                zm = 0;
+                for (int j = 34; j <= 48; j++) {
+                    if (i + 14 <= j) {
+                        board[i][j] = -1;
+                    }
+                    zm += 1;
+                }
+            }
+            for (int i=38;i<42;i++) {
+                zm = 0;
+                for (int j=48;j>=47;j--) {
+                    if(i + 10 >= j + zm) {
+                        board[i][j] = -1;
+                    }
+                    zm+=2;
+                }
+            }
+            for (int i=26;i<48;i++) {
+                zm = 0;
+                for (int j = 27; j <= 48; j++) {
+                    if (i + 1 >= j) {
+                        board[i][j] = -1;
+                    }
+                    zm += 1;
+                }
+            }
+            for (int i=26;i<48;i++) {
+                zm = 0;
+                for (int j=26;j>=0;j--) {
+                    if(i >= j + zm) {
+                        board[i][j] = -1;
+                    }
+                    zm+=2;
+                }
+            }
+            for (int i=34;i<41;i++) {
+                zm = 0;
+                for (int j = 0; j <= 48; j++) {
+                    if (i - 34 >= j) {
+                        board[i][j] = -1;
+                    }
+                    zm += 1;
+                }
+            }
+        }
 
         void initGame(){
 
@@ -55,13 +131,7 @@ public class Hex {
                     board[i][j]=0;
                 }
             }
-
-
-            for (int i=0;i<40;i++) {
-                for (int j=0;j<40;j++) {
-                    board[i][j]=0;
-                }
-            }
+            limit();
         }
 
         void drawHexes(SpriteBatch batch, OrthographicCamera camera){
