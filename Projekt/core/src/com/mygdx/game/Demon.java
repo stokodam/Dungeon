@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Demon {
     int x = 20;
     int y = 26;
+    int health = 3;
 
     TextureAtlas demonTexture;
     TextureRegion[] demon = new TextureRegion[4];
@@ -19,6 +20,15 @@ public class Demon {
         demon[1] = demonTexture.findRegion("Oni-bi2");
         demon[2] = demonTexture.findRegion("Oni-bi3");
         demon[3] = demonTexture.findRegion("Oni-bi4");
-        //texture = demon[0];
+    }
+    int hit(){
+        health -=1;
+
+        if(health < 0)
+        {
+           ;
+        }
+        System.out.println(health);
+        return health;
     }
 }

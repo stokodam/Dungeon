@@ -2,17 +2,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
@@ -23,16 +18,12 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
     private Viewport viewport;
     private SpriteBatch batch;
     float zoompower = 10;
-    boolean scrollingWindow;
-    public int placementX = 0;
-    public int placementY = 0;
     int prevX;
     int prevY;
     int mousepositionx = Gdx.input.getX();
     int mousepositiony = Math.abs(Gdx.input.getY()-720);
     Texture mapatest = new Texture("Map1.png");
 
-    private int backgroundoffset;
 
     //mouse position
 
@@ -42,12 +33,13 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
     Demon oni_bi = new Demon();
 
     public void create () {
-        camera = new OrthographicCamera(1280/4,720/4);//320,180
+        camera = new OrthographicCamera(320,180);
         camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         postac.Load_characters();
         oni_bi.init();
+        hexy.board[oni_bi.x][oni_bi.y] = 1;
     }
 
 
@@ -64,8 +56,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0.3f,0.3f,0.3f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.end();
-        //hexy.drawHexes(batch,camera);
-        hexy.drawHex(oni_bi.x,oni_bi.y,batch,camera,2);
+
         for(int i = postac.getX()-1;i<=postac.getX()+1;i++)
             for(int j = postac.getY()-1;j<=postac.getY()+1;j++){
             if(i>-1 && j>-1 && i<49 && j<49)
@@ -78,14 +69,13 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
                 else
                     hexy.drawHex(i,j,batch,camera,1);
             }
-
+        if(oni_bi != null)
+            hexy.drawHex(oni_bi.x,oni_bi.y,batch,camera,2);
         batch.begin();
-        //System.out.println("Postac: " + hexy.hexCenterx(postac.getX(), postac.getY()) + ", " +  hexy.hexCentery(postac.getY()));
         batch.draw(mapatest,0,0);
-        batch.draw(oni_bi.demon[0],hexy.hexCenterx(oni_bi.x,oni_bi.y)-15,hexy.hexCentery(oni_bi.y)-20);
+        if(oni_bi != null)
+            batch.draw(oni_bi.demon[0],hexy.hexCenterx(oni_bi.x,oni_bi.y)-15,hexy.hexCentery(oni_bi.y)-20);
         batch.draw(postac.Warrior[0], hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()));
-        //System.out.println(postac.getX()+", "+postac.getY());
-      //  batch.draw(postac.Warrior[0], 0, 0);
         batch.end();
     }
 
@@ -140,11 +130,6 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         mousepositionx = Gdx.input.getX() + (int)(camera.position.x-160)*4;
         mousepositiony = Math.abs(Gdx.input.getY()-720) + (int)(camera.position.y-90)*4;
 
-        //System.out.println(camera.position);
-
-        //System.out.println(mousepositionx/4 + ", " + mousepositiony/4);
-        //System.out.println((placementX-160) + ", " + (placementY-90));
-        //System.out.println((placementX) + ", " + (placementY));
         return false;
     }
 
@@ -185,55 +170,52 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
 
         if(button == Input.Buttons.LEFT){
-            //System.out.println("YUP");
-            //System.out.println( mousepositionx+ ", "+mousepositiony);
             for(int i=0;i<hexy.BSIZE;i++)
                 for(int j=0;j<hexy.BSIZE;j++)
-                {//TUTAJ TWORZY HEXY. CO JEST ZAKOMENTOWANE NIE RUSZ
+                {
                     int y = j * (hexy.s+hexy.t);
                     int x = i * hexy.h + (j%2) * hexy.h/2;
                     float[] points = hexy.hex(x,y);
-                    //Polygon poly = new Polygon(points);
                     Array<Vector2> polygon = new Array<>();
                     for (int k = 0; k < 12; k++) {
                         Vector2 v = new Vector2(points[k], points[k+1]);
-                        //System.out.println(v);
                         polygon.add(v);
                         k++;
                     }
-                    //TUTAJ HUBERT, GDZIEś TUTAJ
-                    if(Intersector.isPointInPolygon(polygon,new Vector2(mousepositionx/4,mousepositiony/4))) {//TUTAJ NAM SPRAWDZA KOLIZJE
-                        if (postac.getX() == i && (postac.getY() - j == 1 || postac.getY() - j == -1)) {
-                            if(hexy.board[i][j] != -1)
-                                postac.move_player(i, j);
-                            //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
-                            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
-                            //System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
+                    if(Intersector.isPointInPolygon(polygon,new Vector2(mousepositionx/4,mousepositiony/4))) {
+                        if(hexy.board[i][j] != -1 && hexy.board[i][j] !=1){
+                            if (postac.getX() == i && (postac.getY() - j == 1 || postac.getY() - j == -1)) {
+                                if(hexy.board[i][j] != -1)
+                                    postac.move_player(i, j);
+                                    camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+
+                            }
+
+                            if (postac.getY() == j && (postac.getX() - i == 1 || postac.getX() - i == -1)) {
+                                if(hexy.board[i][j] != -1)
+                                    postac.move_player(i, j);
+                                    camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                            }
+
+                            if (j%2 == 0 && postac.getX() - i == -1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
+                                if(hexy.board[i][j] != -1)
+                                    postac.move_player(i, j);
+                                    camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                            }
+
+                            if (j%2 == 1 && postac.getX() - i == 1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
+                                if(hexy.board[i][j] != -1)
+                                    postac.move_player(i, j);
+                                    camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                            }
+                        }
+                        else if(hexy.board[i][j] == 1){
+                            if(oni_bi.hit() < 0){
+                                oni_bi = null;
+                                hexy.board[i][j] = 0;
+                            }
                         }
 
-                        if (postac.getY() == j && (postac.getX() - i == 1 || postac.getX() - i == -1)) {
-                            if(hexy.board[i][j] != -1)
-                                postac.move_player(i, j);
-                            //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
-                            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
-                            System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
-                        }
-
-                        if (j%2 == 0 && postac.getX() - i == -1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
-                            if(hexy.board[i][j] != -1)
-                                postac.move_player(i, j);
-                            //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
-                            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
-                            System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
-                        }
-
-                        if (j%2 == 1 && postac.getX() - i == 1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
-                            if(hexy.board[i][j] != -1)
-                                postac.move_player(i, j);
-                            //camera.translate(hexy.hexCenterx(postac.getX(), postac.getY()) -160, hexy.hexCentery(postac.getY())-90,0);
-                            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
-                            System.out.println(hexy.hexCenterx(postac.getX(), postac.getY())+", "+ hexy.hexCentery(postac.getY()));
-                    }
                         if(camera.position.x - effectiveViewportWidth/2 < 0)
                             camera.position.x = 0 + effectiveViewportWidth/2;
                         else if(camera.position.x + effectiveViewportWidth/2 > 970)
