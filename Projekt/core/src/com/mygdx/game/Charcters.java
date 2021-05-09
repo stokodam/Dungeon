@@ -1,13 +1,19 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Charcters {
     int x = 26;
+    int prevx = 25;
     int y = 30;
+    int prevy = 30;
+    int aniStart = 0;
+    int aniCurr = 0;
     TextureAtlas playerTexture;
     TextureRegion[] Warrior = new TextureRegion[24];
+    TextureRegion texture;
 
     void Load_characters(){
         playerTexture = new TextureAtlas("Projekt.atlas");
@@ -35,6 +41,7 @@ public class Charcters {
         Warrior[21] = playerTexture.findRegion("warriorprawogora2");
         Warrior[22] = playerTexture.findRegion("warriorprawogora3");
         Warrior[23] = playerTexture.findRegion("warriorprawogora4");
+        texture = Warrior[0];
     }
     public int getX(){
         return this.x;
@@ -43,8 +50,38 @@ public class Charcters {
         return this.y;
     }
     public void move_player(int x,int y){
+        this.prevx = this.x;
         this.x = x;
-        this.y = y;
-    }
 
+        this.prevy = this.y;
+        this.y = y;
+        if(prevy == y )
+            if(prevx < x)
+                aniStart = 12;
+            else
+                aniStart = 0;
+
+        else if(prevy < y)
+            if(prevx < x )
+                aniStart = 20;
+            else if(prevx == x && y%2 !=0)
+                aniStart = 20;
+            else
+                aniStart = 8;
+        else
+            if(prevx < x )
+                aniStart = 16;
+            else if(prevx == x && y%2 !=0)
+                aniStart = 16;
+            else
+                aniStart = 4;
+            aniCurr = aniStart;
+    }
+    void update(){
+        if((aniCurr - aniStart) == 3)
+            aniCurr = aniStart;
+        else
+            aniCurr++;
+        texture = Warrior[aniCurr];
+    }
 }

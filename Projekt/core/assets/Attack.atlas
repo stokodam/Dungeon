@@ -1,0 +1,174 @@
+
+Attack.png
+size: 1024, 32
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+attacklewo1
+  rotate: false
+  xy: 191, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewo2
+  rotate: false
+  xy: 569, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewo3
+  rotate: false
+  xy: 326, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewo4
+  rotate: false
+  xy: 83, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewodol1
+  rotate: false
+  xy: 137, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewodol2
+  rotate: false
+  xy: 488, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewodol3
+  rotate: false
+  xy: 272, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewodol4
+  rotate: false
+  xy: 2, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewogora1
+  rotate: false
+  xy: 623, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewogora2
+  rotate: false
+  xy: 380, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewogora3
+  rotate: false
+  xy: 164, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attacklewogora4
+  rotate: false
+  xy: 542, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawo1
+  rotate: false
+  xy: 353, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawo2
+  rotate: false
+  xy: 110, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawo3
+  rotate: false
+  xy: 461, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawo4
+  rotate: false
+  xy: 245, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawodol1
+  rotate: false
+  xy: 515, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawodol2
+  rotate: false
+  xy: 299, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawodol3
+  rotate: false
+  xy: 29, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawodol4
+  rotate: false
+  xy: 407, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawogora1
+  rotate: false
+  xy: 56, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawogora2
+  rotate: false
+  xy: 434, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawogora3
+  rotate: false
+  xy: 218, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+attackprawogora4
+  rotate: false
+  xy: 596, 2
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1

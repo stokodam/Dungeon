@@ -8,11 +8,13 @@ public class Demon {
     int x = 20;
     int y = 26;
     int health = 3;
+    int aniStart = 0;
+    int aniCurr = 0;
 
     TextureAtlas demonTexture;
-    TextureRegion[] demon = new TextureRegion[4];
+    TextureRegion[] demon = new TextureRegion[6];
 
-    Texture texture;
+    TextureRegion texture;
 
     void init(){
         demonTexture = new TextureAtlas("Oni-bi.atlas");
@@ -20,15 +22,28 @@ public class Demon {
         demon[1] = demonTexture.findRegion("Oni-bi2");
         demon[2] = demonTexture.findRegion("Oni-bi3");
         demon[3] = demonTexture.findRegion("Oni-bi4");
+        demon[4] = demonTexture.findRegion("Oni-bi3");
+        demon[5] = demonTexture.findRegion("Oni-bi2");
+        texture = demon[0];
+    }
+    void update(){
+        //System.out.println(aniCurr);
+        if((aniCurr - aniStart) == 5)
+            aniCurr = aniStart;
+        else
+            aniCurr++;
+        texture = demon[aniCurr];
     }
     int hit(){
+
+
         health -=1;
 
         if(health < 0)
         {
            ;
         }
-        System.out.println(health);
+        //System.out.println(health);
         return health;
     }
 }

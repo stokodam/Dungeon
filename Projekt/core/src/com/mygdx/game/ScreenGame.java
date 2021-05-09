@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
@@ -18,6 +19,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
     private Viewport viewport;
     private SpriteBatch batch;
     float zoompower = 10;
+
     int prevX;
     int prevY;
     int mousepositionx = Gdx.input.getX();
@@ -32,6 +34,16 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
     Hex hexy = new Hex(batch);
     Demon oni_bi = new Demon();
 
+    Timer anim = new Timer();
+    Timer.Task anima = new Timer.Task() {
+        @Override
+        public void run() {
+            postac.update();
+            if(oni_bi != null)
+                oni_bi.update();
+        }
+    };
+
     public void create () {
         camera = new OrthographicCamera(320,180);
         camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
@@ -40,6 +52,8 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         postac.Load_characters();
         oni_bi.init();
         hexy.board[oni_bi.x][oni_bi.y] = 1;
+        anim.start();
+        anim.scheduleTask(anima,0.15f,0.15f);
     }
 
 
@@ -49,6 +63,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
     @Override
     public void render(float deltaTime) {
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         Gdx.input.setInputProcessor(this);
@@ -72,10 +87,14 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         if(oni_bi != null)
             hexy.drawHex(oni_bi.x,oni_bi.y,batch,camera,2);
         batch.begin();
+
         batch.draw(mapatest,0,0);
+
         if(oni_bi != null)
-            batch.draw(oni_bi.demon[0],hexy.hexCenterx(oni_bi.x,oni_bi.y)-15,hexy.hexCentery(oni_bi.y)-20);
-        batch.draw(postac.Warrior[0], hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()));
+            batch.draw(oni_bi.texture,hexy.hexCenterx(oni_bi.x,oni_bi.y)-15,hexy.hexCentery(oni_bi.y)-20);
+
+        batch.draw(postac.texture, hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()));
+
         batch.end();
     }
 
