@@ -15,6 +15,11 @@ public class Demon {
     TextureRegion[] demon = new TextureRegion[6];
 
     TextureRegion texture;
+    Demon(int x,int y){
+        this.x = x;
+        this.y = y;
+
+    }
 
     void init(){
         demonTexture = new TextureAtlas("Oni-bi.atlas");
@@ -26,6 +31,8 @@ public class Demon {
         demon[5] = demonTexture.findRegion("Oni-bi2");
         texture = demon[0];
     }
+    int getX(){return this.x;}
+    int getY(){return this.y;}
     void update(){
         //System.out.println(aniCurr);
         if((aniCurr - aniStart) == 5)

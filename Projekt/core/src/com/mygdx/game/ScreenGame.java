@@ -32,15 +32,17 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
     Charcters postac = new Charcters();
     Hex hexy = new Hex(batch);
-    Demon oni_bi = new Demon();
+    Demon[] oni_bi = {new Demon(30,38),new Demon(22,31),new Demon(7,28),new Demon(19,16),new Demon(32,17),new Demon(32,2)};
 
     Timer anim = new Timer();
     Timer.Task anima = new Timer.Task() {
         @Override
         public void run() {
             postac.update();
-            if(oni_bi != null)
-                oni_bi.update();
+            for (int i = 0; i < oni_bi.length; i++) {
+            if(oni_bi[i] != null)
+                oni_bi[i].update();
+            }
         }
     };
 
@@ -50,8 +52,11 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         postac.Load_characters();
-        oni_bi.init();
-        hexy.board[oni_bi.x][oni_bi.y] = 1;
+        for (int i = 0; i < oni_bi.length; i++) {
+
+        oni_bi[i].init();
+        hexy.board[oni_bi[i].x][oni_bi[i].y] = 1;
+        }
         anim.start();
         anim.scheduleTask(anima,0.15f,0.15f);
     }
@@ -84,14 +89,19 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
                 else
                     hexy.drawHex(i,j,batch,camera,1);
             }
-        if(oni_bi != null)
-            hexy.drawHex(oni_bi.x,oni_bi.y,batch,camera,2);
+        for (int i = 0; i < oni_bi.length; i++) {
+
+        if(oni_bi[i] != null)
+            hexy.drawHex(oni_bi[i].x,oni_bi[i].y,batch,camera,2);
+        }
         batch.begin();
 
         batch.draw(mapatest,0,0);
+        for (int i = 0; i < oni_bi.length; i++) {
 
-        if(oni_bi != null)
-            batch.draw(oni_bi.texture,hexy.hexCenterx(oni_bi.x,oni_bi.y)-15,hexy.hexCentery(oni_bi.y)-20);
+        if(oni_bi[i] != null)
+            batch.draw(oni_bi[i].texture,hexy.hexCenterx(oni_bi[i].x,oni_bi[i].y)-15,hexy.hexCentery(oni_bi[i].y)-20);
+        }
 
         batch.draw(postac.texture, hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()));
 
@@ -229,9 +239,16 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
                             }
                         }
                         else if(hexy.board[i][j] == 1){
-                            if(oni_bi.hit() < 0){
-                                oni_bi = null;
-                                hexy.board[i][j] = 0;
+                            if(postac.fAttack == false){
+                                postac.fAttack = true;
+                                for (int k = 0; k < oni_bi.length; k++) {
+                                    if(oni_bi[k] != null)
+                                    if(oni_bi[k].getX() ==i && oni_bi[k].getY() == j)
+                                        if(oni_bi[k].hit() < 0){
+                                            oni_bi[k] = null;
+                                            hexy.board[i][j] = 0;
+                                        }
+                                }
                             }
                         }
 

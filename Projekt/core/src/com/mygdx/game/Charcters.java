@@ -5,18 +5,22 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Charcters {
-    int x = 26;
+    boolean fAttack = false;
+    int x = 43;
     int prevx = 25;
-    int y = 30;
+    int y = 46;
     int prevy = 30;
     int aniStart = 0;
     int aniCurr = 0;
     TextureAtlas playerTexture;
+    TextureAtlas attackTexture;
     TextureRegion[] Warrior = new TextureRegion[24];
+    TextureRegion[] attack = new TextureRegion[24];
     TextureRegion texture;
 
     void Load_characters(){
         playerTexture = new TextureAtlas("Projekt.atlas");
+        attackTexture = new TextureAtlas("Attack.atlas");
         Warrior[0] = playerTexture.findRegion("warriorlewo1");
         Warrior[1] = playerTexture.findRegion("warriorlewo2");
         Warrior[2] = playerTexture.findRegion("warriorlewo3");
@@ -41,6 +45,30 @@ public class Charcters {
         Warrior[21] = playerTexture.findRegion("warriorprawogora2");
         Warrior[22] = playerTexture.findRegion("warriorprawogora3");
         Warrior[23] = playerTexture.findRegion("warriorprawogora4");
+        attack[0] = attackTexture.findRegion("attacklewo1");
+        attack[1] = attackTexture.findRegion("attacklewo2");
+        attack[2] = attackTexture.findRegion("attacklewo3");
+        attack[3] = attackTexture.findRegion("attacklewo4");
+        attack[4] = attackTexture.findRegion("attacklewodol1");
+        attack[5] = attackTexture.findRegion("attacklewodol2");
+        attack[6] = attackTexture.findRegion("attacklewodol3");
+        attack[7] = attackTexture.findRegion("attacklewodol4");
+        attack[8] = attackTexture.findRegion("attacklewogora1");
+        attack[9] = attackTexture.findRegion("attacklewogora2");
+        attack[10] = attackTexture.findRegion("attacklewogora3");
+        attack[11] = attackTexture.findRegion("attacklewogora4");
+        attack[12] = attackTexture.findRegion("attackprawo1");
+        attack[13] = attackTexture.findRegion("attackprawo2");
+        attack[14] = attackTexture.findRegion("attackprawo3");
+        attack[15] = attackTexture.findRegion("attackprawo4");
+        attack[16] = attackTexture.findRegion("attackprawodol1");
+        attack[17] = attackTexture.findRegion("attackprawodol2");
+        attack[18] = attackTexture.findRegion("attackprawodol3");
+        attack[19] = attackTexture.findRegion("attackprawodol4");
+        attack[20] = attackTexture.findRegion("attackprawogora1");
+        attack[21] = attackTexture.findRegion("attackprawogora2");
+        attack[22] = attackTexture.findRegion("attackprawogora3");
+        attack[23] = attackTexture.findRegion("attackprawogora4");
         texture = Warrior[0];
     }
     public int getX(){
@@ -50,38 +78,50 @@ public class Charcters {
         return this.y;
     }
     public void move_player(int x,int y){
-        this.prevx = this.x;
-        this.x = x;
+        if(fAttack == false)
+        {
+            this.prevx = this.x;
+            this.x = x;
 
-        this.prevy = this.y;
-        this.y = y;
-        if(prevy == y )
-            if(prevx < x)
-                aniStart = 12;
-            else
-                aniStart = 0;
+            this.prevy = this.y;
+            this.y = y;
+            if(prevy == y )
+                if(prevx < x)
+                    aniStart = 12;
+                else
+                    aniStart = 0;
 
-        else if(prevy < y)
-            if(prevx < x )
-                aniStart = 20;
-            else if(prevx == x && y%2 !=0)
-                aniStart = 20;
+            else if(prevy < y)
+                if(prevx < x )
+                    aniStart = 20;
+                else if(prevx == x && y%2 !=0)
+                    aniStart = 20;
+                else
+                    aniStart = 8;
             else
-                aniStart = 8;
-        else
-            if(prevx < x )
-                aniStart = 16;
-            else if(prevx == x && y%2 !=0)
-                aniStart = 16;
-            else
-                aniStart = 4;
-            aniCurr = aniStart;
+                if(prevx < x )
+                    aniStart = 16;
+                else if(prevx == x && y%2 !=0)
+                    aniStart = 16;
+                else
+                    aniStart = 4;
+                aniCurr = aniStart;
+        }
     }
     void update(){
-        if((aniCurr - aniStart) == 3)
+
+        if((aniCurr - aniStart) == 3){
+            if(fAttack == true)
+                 fAttack = false;
             aniCurr = aniStart;
+        }
         else
             aniCurr++;
-        texture = Warrior[aniCurr];
+        if(fAttack == false){
+            texture = Warrior[aniCurr];
+        }
+        else{
+            texture = attack[aniCurr];
+        }
     }
 }
