@@ -10,18 +10,34 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 public class MyGdxGame extends ApplicationAdapter {
+	int flagMenu = 0;
 	ScreenGame screenGame;
+	ScreenMenu screenMenu;
 
 	@Override
 	public void create () {
-		screenGame = new ScreenGame();
-		screenGame.create();
-		screenGame.GameScreen();
+		switch(flagMenu){
+			case 0:
+				screenMenu = new ScreenMenu();
+				break;
+			case 1:
+				screenGame = new ScreenGame();
+				screenGame.create();
+				screenGame.GameScreen();
+				break;
+		}
 	}
 
 	@Override
 	public void render () {
-		screenGame.render(60);
+		switch(flagMenu){
+			case 0:
+				screenMenu.render(30);
+				break;
+			case 1:
+				screenGame.render(60);
+				break;
+		}
 	}
 	
 	@Override
