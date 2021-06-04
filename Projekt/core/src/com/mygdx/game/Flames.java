@@ -1,13 +1,20 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Flames {
+    int aniCurr = 0;
+    int aniStart = 0;
+    int fColour = 0;
+
     TextureAtlas flamesAtlas = new TextureAtlas("Allflames");
     TextureRegion[] flames = new TextureRegion[200];
+    TextureRegion frame;
 
-    public Flames(){
+    public Flames(int fColour){
+        this.fColour = fColour;
         flames[0] = flamesAtlas.findRegion("blue1");
         flames[1] = flamesAtlas.findRegion("blue2");
         flames[2] = flamesAtlas.findRegion("blue3");
@@ -218,5 +225,50 @@ public class Flames {
         flames[197] = flamesAtlas.findRegion("green28");
         flames[198] = flamesAtlas.findRegion("green29");
         flames[199] = flamesAtlas.findRegion("green30");
+        switch(fColour){
+            case 0: //blue
+                aniStart = 0;
+                aniCurr = 0;
+                break;
+            case 1: //purple
+                aniStart = 65;
+                aniCurr = 65;
+                break;
+            case 2: //red
+                aniStart = 95;
+                aniCurr = 95;
+                break;
+            case 3: //green
+                aniStart = 170;
+                aniCurr = 170;
+                break;
+        }
+        frame = flames[aniCurr];
+    }
+
+    void change_flame(){
+        switch(fColour){
+            case 0:
+                if(aniCurr - aniStart == 64)
+                    aniCurr = aniStart;
+                else
+                    aniCurr++;
+                break;
+            case 1:
+            case 3:
+                if(aniCurr - aniStart == 29)
+                    aniCurr = aniStart;
+                else
+                    aniCurr++;
+                break;
+            case 2:
+                if(aniCurr - aniStart == 74)
+                    aniCurr = aniStart;
+                else
+                    aniCurr++;
+                break;
+
+        }
+        frame = flames[aniCurr];
     }
 }

@@ -1,12 +1,6 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -19,6 +13,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		switch(flagMenu){
 			case 0:
 				screenMenu = new ScreenMenu();
+				screenMenu.create();
 				break;
 			case 1:
 				screenGame = new ScreenGame();
@@ -32,10 +27,20 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		switch(flagMenu){
 			case 0:
+				if(screenMenu == null)
+					this.create();
+				if(screenGame != null)
+					screenGame = null;
 				screenMenu.render(30);
+				flagMenu = screenMenu.ifClick();
 				break;
 			case 1:
+				if(screenMenu != null)
+					screenMenu = null;
+				if(screenGame == null)
+					this.create();
 				screenGame.render(60);
+				flagMenu = screenGame.ifClick();
 				break;
 		}
 	}

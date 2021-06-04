@@ -4,30 +4,27 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
-    private static final float WORLD_WIDTH = 1280;
-    private static final float WORLD_HEIGHT = 720;
+
     //screen
     private OrthographicCamera camera;
-    private Viewport viewport;
     private SpriteBatch batch;
-    float zoompower = 10;
+    BitmapFont font = new BitmapFont();
 
     int prevX;
     int prevY;
+    int fTask = 0;
+    int fMenu = 1;
     int mousepositionx = Gdx.input.getX();
     int mousepositiony = Math.abs(Gdx.input.getY()-720);
     Texture mapatest = new Texture("Map1.png");
-
-
-    //mouse position
 
 
     Charcters postac = new Charcters();
@@ -45,6 +42,12 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
             }
         }
     };
+    Timer.Task zadanie = new Timer.Task() {
+        @Override
+        public void run() {
+            fTask = 1;
+        }
+    };
 
     public void create () {
         camera = new OrthographicCamera(320,180);
@@ -52,13 +55,18 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         postac.Load_characters();
+
+        font.getData().setScale(0.8f);
         for (int i = 0; i < oni_bi.length; i++) {
 
         oni_bi[i].init();
         hexy.board[oni_bi[i].x][oni_bi[i].y] = 1;
         }
         anim.start();
+
         anim.scheduleTask(anima,0.15f,0.15f);
+        anim.scheduleTask(zadanie,5f);
+
     }
 
 
@@ -71,11 +79,16 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        Gdx.input.setInputProcessor(this);
         camera.update();
         Gdx.gl.glClearColor(0.3f,0.3f,0.3f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if(fTask == 0)
+            font.draw(batch,"Pokonaj wrogow",hexy.hexCenterx(postac.getX(), postac.getY())-40, hexy.hexCentery(postac.getY())+20);
+        else
+            Gdx.input.setInputProcessor(this);
         batch.end();
+        if (fTask == 1)
+        {
 
         for(int i = postac.getX()-1;i<=postac.getX()+1;i++)
             for(int j = postac.getY()-1;j<=postac.getY()+1;j++){
@@ -105,7 +118,13 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
         batch.draw(postac.texture, hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()));
 
+
         batch.end();
+        }
+    }
+
+    int ifClick(){
+        return this.fMenu;
     }
 
     @Override
@@ -164,31 +183,6 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
-        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
-
-        if(amountY > 0 && zoompower <=10.5f){
-            camera.update();
-            batch.setProjectionMatrix(camera.combined);
-            zoompower +=0.1f;
-            camera.zoom += 0.1f;
-        }
-        else if(amountY < 0 && zoompower >=10.1f){
-            camera.update();
-            batch.setProjectionMatrix(camera.combined);
-            zoompower -=0.1f;
-            camera.zoom -= 0.1f;
-            camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
-        }
-
-        if(camera.position.x - effectiveViewportWidth/2 < 0)
-            camera.position.x = 0 + effectiveViewportWidth/2;
-        else if(camera.position.x + effectiveViewportWidth/2 > 970)
-            camera.position.x = 970 - effectiveViewportWidth/2;
-        if(camera.position.y + effectiveViewportHeight/2 > 676)
-            camera.position.y = 676 - effectiveViewportHeight/2;
-        else if(camera.position.y - effectiveViewportHeight/2 < 0)
-            camera.position.y = 0 + effectiveViewportHeight/2;
 
         return false;
     }
@@ -215,28 +209,38 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
                         if(hexy.board[i][j] != -1 && hexy.board[i][j] !=1){
                             if (postac.getX() == i && (postac.getY() - j == 1 || postac.getY() - j == -1)) {
                                 if(hexy.board[i][j] != -1)
+                                {
                                     postac.move_player(i, j);
                                     camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
-
+                                }
                             }
 
                             if (postac.getY() == j && (postac.getX() - i == 1 || postac.getX() - i == -1)) {
                                 if(hexy.board[i][j] != -1)
+                                {
                                     postac.move_player(i, j);
                                     camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                                }
                             }
 
                             if (j%2 == 0 && postac.getX() - i == -1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
                                 if(hexy.board[i][j] != -1)
+                                {
                                     postac.move_player(i, j);
                                     camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+
+                                }
                             }
 
                             if (j%2 == 1 && postac.getX() - i == 1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
                                 if(hexy.board[i][j] != -1)
+                                    {
                                     postac.move_player(i, j);
                                     camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+
+                                }
                             }
+
                         }
                         else if(hexy.board[i][j] == 1){
                             if(postac.fAttack == false){
@@ -247,6 +251,15 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
                                         if(oni_bi[k].hit() < 0){
                                             oni_bi[k] = null;
                                             hexy.board[i][j] = 0;
+                                            for(int l = 0;l<= oni_bi.length;l++)
+                                            {
+                                                if(l == oni_bi.length)
+                                                    fMenu=0;
+                                                else if(oni_bi[l] == null)
+                                                    continue;
+                                                else
+                                                    break;
+                                            }
                                         }
                                 }
                             }
@@ -260,7 +273,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
                             camera.position.y = 676 - effectiveViewportHeight/2;
                         else if(camera.position.y - effectiveViewportHeight/2 < 0)
                             camera.position.y = 0 + effectiveViewportHeight/2;
-                        System.out.println(i+", "+j);
+
                     }
                 }
         }

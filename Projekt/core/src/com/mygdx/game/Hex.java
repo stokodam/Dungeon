@@ -174,7 +174,7 @@ public class Hex {
             int x = x0 + BORDERS;
 
             if (s == 0  || h == 0) {
-                System.out.println("ERROR: size of hex has not been set");
+
                 return new float[0];
             }
 
