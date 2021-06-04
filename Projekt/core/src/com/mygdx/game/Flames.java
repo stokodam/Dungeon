@@ -1,13 +1,12 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Flames {
     int aniCurr = 0;
     int aniStart = 0;
-    int fColour = 0;
+    int fColour;
 
     TextureAtlas flamesAtlas = new TextureAtlas("Allflames");
     TextureRegion[] flames = new TextureRegion[200];

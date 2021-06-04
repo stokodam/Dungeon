@@ -26,9 +26,8 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
     int mousepositiony = Math.abs(Gdx.input.getY()-720);
     Texture mapatest = new Texture("Map1.png");
 
-
+    Hex hex;
     Charcters postac = new Charcters();
-    Hex hexy = new Hex(batch);
     Demon[] oni_bi = {new Demon(30,38),new Demon(22,31),new Demon(7,28),new Demon(19,16),new Demon(32,17),new Demon(32,2)};
 
     Timer anim = new Timer();
@@ -36,9 +35,9 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         @Override
         public void run() {
             postac.update();
-            for (int i = 0; i < oni_bi.length; i++) {
-            if(oni_bi[i] != null)
-                oni_bi[i].update();
+            for (Demon demon : oni_bi) {
+                if (demon != null)
+                    demon.update();
             }
         }
     };
@@ -50,17 +49,18 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
     };
 
     public void create () {
+        hex = new Hex();
         camera = new OrthographicCamera(320,180);
-        camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+        camera.position.set(Hex.hexCenterx(postac.getX(), postac.getY()), Hex.hexCentery(postac.getY()),0);
         batch = new SpriteBatch();
         batch.setProjectionMatrix(camera.combined);
         postac.Load_characters();
 
         font.getData().setScale(0.8f);
-        for (int i = 0; i < oni_bi.length; i++) {
+        for (Demon demon : oni_bi) {
 
-        oni_bi[i].init();
-        hexy.board[oni_bi[i].x][oni_bi[i].y] = 1;
+            demon.init();
+            Hex.board[demon.x][demon.y] = 1;
         }
         anim.start();
 
@@ -83,7 +83,7 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0.3f,0.3f,0.3f,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if(fTask == 0)
-            font.draw(batch,"Pokonaj wrogow",hexy.hexCenterx(postac.getX(), postac.getY())-40, hexy.hexCentery(postac.getY())+20);
+            font.draw(batch,"Pokonaj wrogow", Hex.hexCenterx(postac.getX(), postac.getY())-40, Hex.hexCentery(postac.getY())+20);
         else
             Gdx.input.setInputProcessor(this);
         batch.end();
@@ -93,30 +93,26 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         for(int i = postac.getX()-1;i<=postac.getX()+1;i++)
             for(int j = postac.getY()-1;j<=postac.getY()+1;j++){
             if(i>-1 && j>-1 && i<49 && j<49)
-                if(postac.getY()%2 == 1 &&  postac.getY()  != j && i - postac.getX() == -1 ){
-
+                if (postac.getY() % 2 != 1 || postac.getY() == j || i - postac.getX() != -1) {
+                    if (postac.getY() % 2 != 0 || postac.getY() == j || i - postac.getX() != 1)
+                        Hex.drawHex(i, j, batch, camera, 1);
                 }
-                else if(postac.getY()%2 == 0 &&  postac.getY()  != j && i - postac.getX() == 1){
-
-                }
-                else
-                    hexy.drawHex(i,j,batch,camera,1);
             }
-        for (int i = 0; i < oni_bi.length; i++) {
+            for (Demon demon : oni_bi) {
 
-        if(oni_bi[i] != null)
-            hexy.drawHex(oni_bi[i].x,oni_bi[i].y,batch,camera,2);
-        }
+                if (demon != null)
+                    Hex.drawHex(demon.x, demon.y, batch, camera, 2);
+            }
         batch.begin();
 
         batch.draw(mapatest,0,0);
-        for (int i = 0; i < oni_bi.length; i++) {
+            for (Demon demon : oni_bi) {
 
-        if(oni_bi[i] != null)
-            batch.draw(oni_bi[i].texture,hexy.hexCenterx(oni_bi[i].x,oni_bi[i].y)-15,hexy.hexCentery(oni_bi[i].y)-20);
-        }
+                if (demon != null)
+                    batch.draw(demon.texture, Hex.hexCenterx(demon.x, demon.y) - 15, Hex.hexCentery(demon.y) - 20);
+            }
 
-        batch.draw(postac.texture, hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()));
+        batch.draw(postac.texture, Hex.hexCenterx(postac.getX(), postac.getY()), Hex.hexCentery(postac.getY()));
 
 
         batch.end();
@@ -193,72 +189,71 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
 
         if(button == Input.Buttons.LEFT){
-            for(int i=0;i<hexy.BSIZE;i++)
-                for(int j=0;j<hexy.BSIZE;j++)
+            for(int i = 0; i< Hex.BSIZE; i++)
+                for(int j = 0; j< Hex.BSIZE; j++)
                 {
-                    int y = j * (hexy.s+hexy.t);
-                    int x = i * hexy.h + (j%2) * hexy.h/2;
-                    float[] points = hexy.hex(x,y);
+                    int y = j * (Hex.s + Hex.t);
+                    int x = i * Hex.h + (j%2) * Hex.h /2;
+                    float[] points = Hex.hex(x,y);
                     Array<Vector2> polygon = new Array<>();
                     for (int k = 0; k < 12; k++) {
                         Vector2 v = new Vector2(points[k], points[k+1]);
                         polygon.add(v);
                         k++;
                     }
-                    if(Intersector.isPointInPolygon(polygon,new Vector2(mousepositionx/4,mousepositiony/4))) {
-                        if(hexy.board[i][j] != -1 && hexy.board[i][j] !=1){
+                    if(Intersector.isPointInPolygon(polygon,new Vector2((float)mousepositionx/4,(float) mousepositiony/4))) {
+                        if(Hex.board[i][j] != -1 && Hex.board[i][j] !=1){
                             if (postac.getX() == i && (postac.getY() - j == 1 || postac.getY() - j == -1)) {
-                                if(hexy.board[i][j] != -1)
+                                if(Hex.board[i][j] != -1)
                                 {
                                     postac.move_player(i, j);
-                                    camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                                    camera.position.set(Hex.hexCenterx(postac.getX(), postac.getY()), Hex.hexCentery(postac.getY()),0);
                                 }
                             }
 
                             if (postac.getY() == j && (postac.getX() - i == 1 || postac.getX() - i == -1)) {
-                                if(hexy.board[i][j] != -1)
+                                if(Hex.board[i][j] != -1)
                                 {
                                     postac.move_player(i, j);
-                                    camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                                    camera.position.set(Hex.hexCenterx(postac.getX(), postac.getY()), Hex.hexCentery(postac.getY()),0);
                                 }
                             }
 
                             if (j%2 == 0 && postac.getX() - i == -1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
-                                if(hexy.board[i][j] != -1)
+                                if(Hex.board[i][j] != -1)
                                 {
                                     postac.move_player(i, j);
-                                    camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                                    camera.position.set(Hex.hexCenterx(postac.getX(), postac.getY()), Hex.hexCentery(postac.getY()),0);
 
                                 }
                             }
 
                             if (j%2 == 1 && postac.getX() - i == 1 && (postac.getY() - j == 1 || postac.getY() - j == -1)){
-                                if(hexy.board[i][j] != -1)
+                                if(Hex.board[i][j] != -1)
                                     {
                                     postac.move_player(i, j);
-                                    camera.position.set(hexy.hexCenterx(postac.getX(), postac.getY()), hexy.hexCentery(postac.getY()),0);
+                                    camera.position.set(Hex.hexCenterx(postac.getX(), postac.getY()), Hex.hexCentery(postac.getY()),0);
 
                                 }
                             }
 
                         }
-                        else if(hexy.board[i][j] == 1){
-                            if(postac.fAttack == false){
+                        else if(Hex.board[i][j] == 1){
+                            if(!postac.fAttack){
                                 postac.fAttack = true;
                                 for (int k = 0; k < oni_bi.length; k++) {
                                     if(oni_bi[k] != null)
                                     if(oni_bi[k].getX() ==i && oni_bi[k].getY() == j)
                                         if(oni_bi[k].hit() < 0){
                                             oni_bi[k] = null;
-                                            hexy.board[i][j] = 0;
+                                            Hex.board[i][j] = 0;
                                             for(int l = 0;l<= oni_bi.length;l++)
                                             {
                                                 if(l == oni_bi.length)
                                                     fMenu=0;
-                                                else if(oni_bi[l] == null)
-                                                    continue;
-                                                else
+                                                else if (oni_bi[l] != null) {
                                                     break;
+                                                }
                                             }
                                         }
                                 }

@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -78,7 +77,7 @@ public class Charcters {
         return this.y;
     }
     public void move_player(int x,int y){
-        if(fAttack == false)
+        if(!fAttack)
         {
             this.prevx = this.x;
             this.x = x;
@@ -111,13 +110,13 @@ public class Charcters {
     void update(){
 
         if((aniCurr - aniStart) == 3){
-            if(fAttack == true)
+            if(fAttack)
                  fAttack = false;
             aniCurr = aniStart;
         }
         else
             aniCurr++;
-        if(fAttack == false){
+        if(!fAttack){
             texture = Warrior[aniCurr];
         }
         else{

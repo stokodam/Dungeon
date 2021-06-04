@@ -1,5 +1,6 @@
 package com.mygdx.game.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.MyGdxGame;
@@ -11,6 +12,8 @@ public class DesktopLauncher {
 		config.height = 720;
 		config.fullscreen = false;
 		config.resizable = false;
+		config.title = "Majster Dungeon";
+		config.addIcon("tytul.png", Files.FileType.Local);
 		new LwjglApplication(new MyGdxGame(), config);
 	}
 }
