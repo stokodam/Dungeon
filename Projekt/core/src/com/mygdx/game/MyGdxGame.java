@@ -2,12 +2,26 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 
-
+/**
+ * Klasa tworzaca okno aplikacji.
+ */
 public class MyGdxGame extends ApplicationAdapter {
+	/**
+	 * Przechowuje informacje ktory ekran wyswietlic.
+	 */
 	int flagMenu = 0;
+	/**
+	 * Wskaznik na ekran gry
+	 */
 	ScreenGame screenGame;
+	/**
+	 * Wskaznik na ekran menu
+	 */
 	ScreenMenu screenMenu;
 
+	/**
+	 * Tworzy nam okreslony ekran.
+	 */
 	@Override
 	public void create () {
 		switch(flagMenu){
@@ -23,6 +37,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 	}
 
+	/**
+	 * Metoda ktora wywoluje renderowanie odpowiedniego ekranu.
+	 */
 	@Override
 	public void render () {
 		switch(flagMenu){

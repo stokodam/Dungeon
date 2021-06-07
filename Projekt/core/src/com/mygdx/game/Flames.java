@@ -3,15 +3,41 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+/**
+ * Klasa odpowiadajaca za ogniki na ekranie menu.
+ */
 public class Flames {
+
+    /**
+     * Obecna klatka animacji.
+     */
     int aniCurr = 0;
+    /**
+     * Poczatkowa klatka animacji.
+     */
     int aniStart = 0;
+    /**
+     * oreslamy kolor dostepnych ognikow.
+     */
     int fColour;
 
+    /**
+     * Animacje ognikow.
+     */
     TextureAtlas flamesAtlas = new TextureAtlas("Allflames");
+    /**
+     * Tablica tekstur ognikow.
+     */
     TextureRegion[] flames = new TextureRegion[200];
+    /**
+     * Tekstura ktora przekazujemy do pokazania na ekranie.
+     */
     TextureRegion frame;
 
+    /**
+     * Funkcja odpowiadajaca z wczytanie kazdej klatki animacji z atlasu.
+     * @param fColour kolor ognika.
+     */
     public Flames(int fColour){
         this.fColour = fColour;
         flames[0] = flamesAtlas.findRegion("blue1");
@@ -245,6 +271,9 @@ public class Flames {
         frame = flames[aniCurr];
     }
 
+    /**
+     * Funkcja zmienia klatki animacji.
+     */
     void change_flame(){
         switch(fColour){
             case 0:

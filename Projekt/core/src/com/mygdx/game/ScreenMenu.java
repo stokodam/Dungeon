@@ -7,17 +7,41 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.Timer;
 
+/**
+ * Klasa przechowujaca pola i metody dla ekranu menu.
+ */
 public class ScreenMenu extends InputAdapter implements Screen ,InputProcessor{
+    /**
+     * Wczytywanie tekstury do przycisku play.
+     */
     Texture newGame = new Texture("play.png");
+    /**
+     * Wczytywanie tekstury do przycisku exit.
+     */
     Texture exit = new Texture("exit.png");
+    /**
+     * Warstwa ekranu.
+     */
     SpriteBatch screen = new SpriteBatch();
+    /**
+     * Wczytanie ognikow.
+     */
     Flames[] flames = { new Flames(0),
                         new Flames(1),
                         new Flames(2),
                         new Flames(3)};
+    /**
+     * Flaga dotyczaca ktory ekran ma sie wyswietlic.
+     */
     int fMenu = 0;
 
+    /**
+     * Timer do animacji.
+     */
     Timer anim = new Timer();
+    /**
+     * Wyznaczamy zadanie dla timera.
+     */
     Timer.Task anima = new Timer.Task() {
         @Override
         public void run() {
@@ -26,9 +50,18 @@ public class ScreenMenu extends InputAdapter implements Screen ,InputProcessor{
             }
         }
     };
+    /**
+     * Pozycja x kursora.
+     */
     private int mousepositionx;
+    /**
+     * Pozycja y kursora.
+     */
     private int mousepositiony;
 
+    /**
+     * Funkcja uruchamiajaca timery, animacje oraz przechwytuje kursor.
+     */
     public void create(){
         anim.start();
         anim.scheduleTask(anima,0.05f,0.05f);
@@ -40,6 +73,10 @@ public class ScreenMenu extends InputAdapter implements Screen ,InputProcessor{
 
     }
 
+    /**
+     * renderowanie ekranu i pokazywanie odpowiednich spritow na odpowiednich pozycjach.
+     * @param delta delta
+     */
     @Override
     public void render(float delta) {
 
@@ -58,9 +95,14 @@ public class ScreenMenu extends InputAdapter implements Screen ,InputProcessor{
         screen.draw(exit,565,300);
         screen.end();
     }
+
+    /**
+     * @return Zwraca stan przycisku.
+     */
     int ifClick(){
         return this.fMenu;
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -87,12 +129,25 @@ public class ScreenMenu extends InputAdapter implements Screen ,InputProcessor{
 
     }
 
+    /**
+     * @param screenX pozycja x myszy
+     * @param screenY pozycja y myszy
+     * @return Zwraca ruch kursora.
+     */
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         mousepositionx = Gdx.input.getX();
         mousepositiony = Gdx.input.getY();
         return false;
     }
+
+    /**
+     * @param screenX pozycja x ekranu
+     * @param screenY pozycja y ekranu
+     * @param pointer wskaznik na wydarzenie
+     * @param button przycisk
+     * @return Zwraca wartosc ktora jest potrzebna jesli uzywasz input multiplexer
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 

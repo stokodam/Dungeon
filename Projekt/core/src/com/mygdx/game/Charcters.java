@@ -3,20 +3,62 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+/**
+ * Klasa przechowujaca wszystkie pola i metody dotyczace bohatera gry.
+ */
 public class Charcters {
+    /**
+     * Flaga okreslajaca czy gracz atakuje.
+     */
     boolean fAttack = false;
+    /**
+     * Aktualne polozenie x gracza.
+     */
     int x = 43;
+    /**
+     * Poprzednie polozenie x gracza.
+     */
     int prevx = 25;
+    /**
+     * Aktualne polozenie y gracza.
+     */
     int y = 46;
+    /**
+     * Poprzednie polozenie y gracza.
+     */
     int prevy = 30;
+    /**
+     * poczatkowa klataka animacji.
+     */
     int aniStart = 0;
+    /**
+     * aktualna klatka animacji.
+     */
     int aniCurr = 0;
+    /**
+     * Animacja ruchu bohatera.
+     */
     TextureAtlas playerTexture;
+    /**
+     * Animacja ataku bohatera.
+     */
     TextureAtlas attackTexture;
+    /**
+     * Tablica tekstur ruchu bohatera.
+     */
     TextureRegion[] Warrior = new TextureRegion[24];
+    /**
+     * Tablica tekstur ataku bohatera
+     */
     TextureRegion[] attack = new TextureRegion[24];
+    /**
+     * Tekstura ktora przekazujemy do pokazania na ekranie.
+     */
     TextureRegion texture;
 
+    /**
+     * Funkcja odpowiadajaca z wczytanie kazdej klatki animacji z atlasu.
+     */
     void Load_characters(){
         playerTexture = new TextureAtlas("Projekt.atlas");
         attackTexture = new TextureAtlas("Attack.atlas");
@@ -70,12 +112,26 @@ public class Charcters {
         attack[23] = attackTexture.findRegion("attackprawogora4");
         texture = Warrior[0];
     }
+
+    /**
+     * @return zwraca nam pozycje x hexa na ktorym znajduje sie aktualnie gracz.
+     */
     public int getX(){
         return this.x;
     }
+
+    /**
+     * @return zwraca nam pozycje y hexa na ktorym znajduje sie aktualnie gracz.
+     */
     public int getY(){
         return this.y;
     }
+
+    /**
+     * Funkcja odpowiada za zmiane polozenia gracza na mapie oraz zmiane kierunku animacji.
+     * @param x Przekazujemy wspolrzedne x hexa na ktory mamy przejsc.
+     * @param y Przekazujemy wspolrzedne y hexa na ktory mamy przejsc.
+     */
     public void move_player(int x,int y){
         if(!fAttack)
         {
@@ -107,6 +163,10 @@ public class Charcters {
                 aniCurr = aniStart;
         }
     }
+
+    /**
+     * Funkcja zmieniajaca klatke animacji bohatera.
+     */
     void update(){
 
         if((aniCurr - aniStart) == 3){
