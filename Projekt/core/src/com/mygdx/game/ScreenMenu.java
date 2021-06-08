@@ -132,7 +132,7 @@ public class ScreenMenu extends InputAdapter implements Screen ,InputProcessor{
     /**
      * @param screenX pozycja x myszy
      * @param screenY pozycja y myszy
-     * @return Zwraca ruch kursora.
+     * @return Zwraca wartosc ktora jest potrzebna jesli uzywasz input multiplexer.
      */
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
@@ -146,7 +146,7 @@ public class ScreenMenu extends InputAdapter implements Screen ,InputProcessor{
      * @param screenY pozycja y ekranu
      * @param pointer wskaznik na wydarzenie
      * @param button przycisk
-     * @return Zwraca wartosc ktora jest potrzebna jesli uzywasz input multiplexer
+     * @return Zwraca wartosc ktora jest potrzebna jesli uzywasz input multiplexer.
      */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {

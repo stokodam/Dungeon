@@ -11,26 +11,69 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 
+/**
+ * Klasa przechowujaca pola i metody ekranu gry.
+ */
 public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
     //screen
+    /**
+     * Kamera glowna gry.
+     */
     private OrthographicCamera camera;
+    /**
+     * Warstwa na ktorej sa rysowane spraity
+     */
     private SpriteBatch batch;
+    /**
+     * Czcionka uzywana w grze.
+     */
     BitmapFont font = new BitmapFont();
 
-    int prevX;
-    int prevY;
+    /**
+     * Flaga dotyczaca tekstu pojawiajacego sie na ekranie.
+     */
     int fTask = 0;
+    /**
+     * Flaga dotyczaca ktory ekran ma sie wyswietlic.
+     */
     int fMenu = 1;
+    /**
+     * Pozycja X kursora.
+     */
     int mousepositionx = Gdx.input.getX();
+    /**
+     * Pozycja X kursora.
+     */
     int mousepositiony = Math.abs(Gdx.input.getY()-720);
+    /**
+     * Wczytywanie grafiki mapy.
+     */
     Texture mapatest = new Texture("Map1.png");
 
+    /**
+     * Wskaznik na klase Hex.
+     * @see Hex
+     */
     Hex hex;
+    /**
+     * Wskaznik na postac.
+     * @see Charcters
+     */
     Charcters postac = new Charcters();
+    /**
+     * Tablica klas zawierajaca wskazniki na przeciwnikow.
+     * @see Demon
+     */
     Demon[] oni_bi = {new Demon(30,38),new Demon(22,31),new Demon(7,28),new Demon(19,16),new Demon(32,17),new Demon(32,2)};
 
+    /**
+     * Timer do zmieniania klatek animacji.
+     */
     Timer anim = new Timer();
+    /**
+     * Zadanie dla Timeru - obslugiwanie animacji przeciwnikow.
+     */
     Timer.Task anima = new Timer.Task() {
         @Override
         public void run() {
@@ -41,6 +84,9 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
             }
         }
     };
+    /**
+     * Zadanie dla Timeru - uruchomienie glownej gry po wygasnieciu tekstu.
+     */
     Timer.Task zadanie = new Timer.Task() {
         @Override
         public void run() {
@@ -48,6 +94,9 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         }
     };
 
+    /**
+     * Funkcja odpowiadajaca za utowrzenie pozycji kamery, obslugi spriteow, uruchomienie taskow dla timera.
+     */
     public void create () {
         hex = new Hex();
         camera = new OrthographicCamera(320,180);
@@ -70,10 +119,17 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
     }
 
 
+    /**
+     * Utworzenie warstwy do rysowania spriteow.
+     */
     void GameScreen(){
         batch = new SpriteBatch();
     }
 
+    /**
+     * Renderowanie wszystkich potrzebnych spriteow i grafik na ekran.
+     * @param deltaTime deltatime
+     */
     @Override
     public void render(float deltaTime) {
 
@@ -119,9 +175,11 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         }
     }
 
-    int ifClick(){
-        return this.fMenu;
-    }
+    /**
+     * Funkcja sprawdza czy wszyscy przeciwnicy zostali pokonani.
+     * @return zwraca czy wszyscy przeciwnicy zostali pokonani.
+     */
+    int ifClick(){return this.fMenu;}
 
     @Override
     public void resize(int width, int height) {
@@ -169,6 +227,11 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         return false;
     }
 
+    /**
+     * @param screenX Zwraca pozycje ekranu x.
+     * @param screenY Zwraca pozycje ekranu y.
+     * @return Zwraca wartosc ktora jest potrzebna jesli uzywasz input multiplexer.
+     */
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         mousepositionx = Gdx.input.getX() + (int)(camera.position.x-160)*4;
@@ -183,6 +246,14 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
         return false;
     }
 
+    /**
+     * Funkcja ktora sprawdza na ktory hex kliknal gracz.
+     * @param screenX pozycja x ekranu
+     * @param screenY pozycja y ekranu
+     * @param pointer wskaznik na wydarzenie
+     * @param button przycisk
+     * @return Zwraca wartosc ktora jest potrzebna jesli uzywasz input multiplexer.
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
@@ -271,10 +342,6 @@ public class ScreenGame extends InputAdapter implements Screen, InputProcessor {
 
                     }
                 }
-        }
-        if(button == Input.Buttons.RIGHT){
-            prevX = screenX;
-            prevY = screenY;
         }
         return false;
     }
